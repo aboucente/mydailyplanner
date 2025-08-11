@@ -9,15 +9,39 @@
         >
       </div>
       <div class="col-4 text-right">
-        <q-btn size="md" flat icon="add" color="black" />
+        <q-btn
+          size="md"
+          flat
+          icon="add"
+          color="black"
+          @click="showTaskSaveModal = true"
+        />
       </div>
     </div>
-    <div>
+    <div class="text-center">
       <!--Filter btns: All,Done,Not Done-->
       <div class="q-gutter-x-md">
-        <q-btn size="sm" color="grey-4" textColor="black" label="All" />
-        <q-btn size="sm" color="grey-4" textColor="black" label="Done" />
-        <q-btn size="sm" color="grey-4" textColor="black" label="Not Done" />
+        <q-btn
+          size="sm"
+          :color="filter === 'all' ? 'black' : 'grey-4'"
+          :textColor="filter === 'all' ? 'white' : 'black'"
+          label="All"
+          @click="getTasks()"
+        />
+        <q-btn
+          size="sm"
+          :color="filter === 'completed' ? 'black' : 'grey-4'"
+          :textColor="filter === 'completed' ? 'white' : 'black'"
+          label="Done"
+          @click="getCompletedTasks()"
+        />
+        <q-btn
+          size="sm"
+          :color="filter === 'awaiting' ? 'black' : 'grey-4'"
+          :textColor="filter === 'awaiting' ? 'white' : 'black'"
+          label="Not Done"
+          @click="getAwaitingTasks()"
+        />
       </div>
     </div>
     <div class="q-mt-md">
@@ -48,34 +72,43 @@
         <q-item-section side></q-item-section>
       </q-item> -->
     </div>
+    <TaskSaveModal
+      :show="showTaskSaveModal"
+      @update:show="showTaskSaveModalFn"
+    />
   </q-page>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import TaskList from "../components/TaskList.vue";
+import TaskSaveModal from "../components/TaskSaveModal.vue";
+import taskService from "../services/tasks";
 defineOptions({
   name: "IndexPage",
 });
+const showTaskSaveModal = ref(false);
+const showTaskSaveModalFn = (value) => {
+  showTaskSaveModal.value = value;
+};
+const filter = ref("all");
+const tasks = ref([]);
 
-const tasks = ref([
-  {
-    title: "Task 1",
-    description: "Description 1",
-    time: "11:00 AM",
-    minutesToComplete: 60,
-    minutesSpent: 0,
-    completed: false,
-  },
-  {
-    title: "Task 2",
-    description: "Description 2",
-    time: "12:00 PM",
-    minutesToComplete: 120,
-    minutesSpent: 0,
-    completed: false,
-  },
-]);
+const getTasks = async () => {
+  filter.value = "all";
+  tasks.value = await taskService.getTasks();
+};
+const getCompletedTasks = async () => {
+  filter.value = "completed";
+  tasks.value = await taskService.getCompletedTasks();
+};
+const getAwaitingTasks = async () => {
+  filter.value = "awaiting";
+  tasks.value = await taskService.getAwaitingTasks();
+};
+onMounted(() => {
+  getTasks();
+});
 </script>
 <style scoped>
 * {

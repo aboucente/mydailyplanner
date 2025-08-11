@@ -10,10 +10,10 @@
 
     <q-page-container>
       <router-view />
+      <q-footer bordered style="background: white; color: grey">
+        <MenusLink :menus="menus" />
+      </q-footer>
     </q-page-container>
-    <q-footer bordered style="background: white; color: grey">
-      <MenusLink :menus="menus" />
-    </q-footer>
   </q-layout>
 </template>
 

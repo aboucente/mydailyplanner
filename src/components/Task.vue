@@ -1,6 +1,6 @@
 <template>
   <div class="q-mt-md">
-    <q-item class="q-pa-none" style="border-radius: 10px">
+    <q-item bordered class="q-pa-none" style="border-radius: 10px">
       <q-item-section avatar style="width: 50px !important">
         <div
           class="q-pa-sm flex items-center justify-center"
@@ -23,12 +23,17 @@
         <q-item-label>{{ task.title }}</q-item-label>
         <q-item-label caption>Début: {{ task.time }}</q-item-label>
         <q-item-label caption
-          >Temps de completion:
+          >Temps prévue:
           {{ changeMinutesToHours(task.minutesToComplete) }} heure</q-item-label
+        >
+        <q-item-label caption
+          >Temps passé:
+          {{ changeMinutesToHours(task.minutesSpent) }} heure</q-item-label
         >
       </q-item-section>
       <q-item-section side></q-item-section>
     </q-item>
+    <q-separator class="q-mt-sm" />
   </div>
 </template>
 
@@ -50,6 +55,6 @@ const changeMinutesToHours = (minutes) => {
 </script>
 <style scoped>
 * {
-  font-size: 12px;
+  font-size: 14px;
 }
 </style>

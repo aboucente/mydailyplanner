@@ -7,7 +7,13 @@
         >
       </div>
 
-      <q-btn size="md" flat icon="add" color="black" />
+      <q-btn
+        size="md"
+        flat
+        icon="add"
+        color="black"
+        @click="showTaskSaveModal = true"
+      />
     </div>
     <div
       style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem"
@@ -17,9 +23,11 @@
           <q-card-section>
             <q-item-label class=""
               >Tasks <br />
-              completed</q-item-label
+              Total</q-item-label
             >
-            <q-item-label class="mycard text-bold">5</q-item-label>
+            <q-item-label class="mycard text-bold">{{
+              stats.total
+            }}</q-item-label>
           </q-card-section>
         </q-card>
       </div>
@@ -27,10 +35,12 @@
         <q-card>
           <q-card-section>
             <q-item-label class=""
-              >Meetings <br />
-              Attended</q-item-label
+              >Tasks <br />
+              Completed</q-item-label
             >
-            <q-item-label class="mycard text-bold">2</q-item-label>
+            <q-item-label class="mycard text-bold">{{
+              stats.completed
+            }}</q-item-label>
           </q-card-section>
         </q-card>
       </div>
@@ -62,38 +72,33 @@
       <q-item-label class="text-bold text-h6">Tasks</q-item-label>
     </div>
     <div class="q-mt-md">
-      <q-item class="q-pa-none" style="border-radius: 10px">
-        <q-item-section avatar style="width: 50px !important">
-          <div
-            class="q-pa-sm flex items-center justify-center"
-            style="background-color: #f0f2f5; border-radius: 10px; width: 50px"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24px"
-              height="24px"
-              fill="currentColor"
-              viewBox="0 0 256 256"
-            >
-              <path
-                d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Z"
-              ></path>
-            </svg>
-          </div>
-        </q-item-section>
-        <q-item-section class="q-ml-sm">
-          <q-item-label>Project Alpha</q-item-label>
-          <q-item-label caption>11:00 AM</q-item-label>
-        </q-item-section>
-        <q-item-section side></q-item-section>
-      </q-item>
+      <TaskList :tasks="tasks" />
     </div>
+    <TaskSaveModal
+      :show="showTaskSaveModal"
+      @update:show="showTaskSaveModalFn"
+    />
   </q-page>
 </template>
 
 <script setup>
+import TaskSaveModal from "components/TaskSaveModal.vue";
+import taskService from "../services/tasks";
+import TaskList from "../components/TaskList.vue";
+import { ref, onMounted } from "vue";
 defineOptions({
   name: "IndexPage",
+});
+const showTaskSaveModal = ref(false);
+const showTaskSaveModalFn = (value) => {
+  showTaskSaveModal.value = value;
+};
+const tasks = ref([]);
+const stats = ref([]);
+onMounted(async () => {
+  tasks.value = await taskService.getLastFiveTasks();
+  stats.value = await taskService.dashboardStats();
+  console.log(stats);
 });
 </script>
 

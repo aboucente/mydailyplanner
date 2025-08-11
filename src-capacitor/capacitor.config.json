@@ -1,0 +1,13 @@
+{
+  "appId": "io.aboucente.mydailyplanner",
+  "appName": "MyDaily Planer",
+  "webDir": "www",
+  "plugins": {
+    "@capacitor-community/sqlite": {
+      "database": "tasks.db"
+    },
+    "EdgeToEdge": {
+      "backgroundColor": "#ffffff"
+    }
+  }
+}

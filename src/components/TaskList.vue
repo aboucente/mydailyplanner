@@ -1,6 +1,11 @@
 <template>
   <div>
     <Task v-for="task in tasks" :key="task.id" :task="task" />
+    <template v-if="tasks.length === 0">
+      <q-item-label style="text-align: center; font-size: 14px"
+        >Aucune tâche trouvée</q-item-label
+      >
+    </template>
   </div>
 </template>
 
