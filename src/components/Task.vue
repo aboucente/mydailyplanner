@@ -31,14 +31,24 @@
           {{ changeMinutesToHours(task.minutesSpent) }} heure</q-item-label
         >
       </q-item-section>
-      <q-item-section side></q-item-section>
+      <q-item-section side>
+        <q-btn flat icon="edit" color="primary" @click="editTask()" />
+        <q-btn flat icon="delete" color="negative" @click="deleteTask()" />
+      </q-item-section>
     </q-item>
     <q-separator class="q-mt-sm" />
+    <TaskSaveModal
+      v-model:show="showTaskModal"
+      :task="task"
+      @update:show="showTaskModal = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { ref } from "vue";
+import TaskSaveModal from "./TaskSaveModal.vue";
+import { useQuasar } from "quasar";
 defineProps({
   task: {
     type: Object,
@@ -48,9 +58,19 @@ defineProps({
 defineOptions({
   name: "TaskComponent",
 });
+const $q = useQuasar();
+const showTaskModal = ref(false);
+const emit = defineEmits(["edit-task", "delete-task"]);
 
 const changeMinutesToHours = (minutes) => {
   return minutes / 60;
+};
+const editTask = () => {
+  console.log("task:", props.task);
+  showTaskModal.value = true;
+};
+const deleteTask = () => {
+  emit("delete-task", task);
 };
 </script>
 <style scoped>
